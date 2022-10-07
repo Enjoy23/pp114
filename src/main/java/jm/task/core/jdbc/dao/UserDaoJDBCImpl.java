@@ -1,8 +1,10 @@
 package jm.task.core.jdbc.dao;
 
+import com.sun.xml.bind.v2.model.core.ID;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
+import javax.sound.midi.Soundbank;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,7 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setString(2,lastName);
             preparedStatement.setByte(3,age);
             preparedStatement.executeUpdate();
+            System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -63,12 +66,28 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        List <User> users = new ArrayList<>();
-        try (ResultSet resultSet = connection.createStatement().executeQuery(GET_ALL_USERS)) {
+//        List <User> users = new ArrayList<>();
+//        try (ResultSet resultSet = connection.createStatement().executeQuery(GET_ALL_USERS)) {
+//            while (resultSet.next()) {
+//                users.add(new User(resultSet.getString("name"),
+//                        resultSet.getString("last_name"),
+//                        resultSet.getByte("age")));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return users;
+        List<User> users = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_USERS);
+             ResultSet resultSet = preparedStatement.executeQuery(); ) {
             while (resultSet.next()) {
-                users.add(new User(resultSet.getString("name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getByte("age")));
+                //users.add(new User(resultSet));
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setAge(resultSet.getByte("age"));
+                users.add(user);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,7 +95,7 @@ public class UserDaoJDBCImpl implements UserDao {
         return users;
     }
 
-    public void cleanUsersTable() {
+        public void cleanUsersTable() {
         try(Statement statement = connection.createStatement()) {
             statement.executeUpdate(CLEAN_USERS_TABLE);
         } catch (SQLException e) {
