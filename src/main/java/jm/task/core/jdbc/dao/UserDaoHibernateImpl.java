@@ -17,9 +17,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         Session session = Util.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
             session.createSQLQuery(UserDaoJDBCImpl.CREATE_USER_TABLE).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
@@ -31,9 +30,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         Session session = Util.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();;
+        Transaction transaction = session.beginTransaction();
+        try (session) {
             session.createSQLQuery(UserDaoJDBCImpl.DROP_USER_TABLE).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
@@ -45,9 +43,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         Session session = Util.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
             session.save(new User(name,lastName,age));
             transaction.commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
@@ -60,9 +57,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         Session session = Util.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
             User user = session.get(User.class, id);
             session.delete(user);
             transaction.commit();
@@ -74,9 +70,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        Session session = Util.getSession();
         List users = new ArrayList<>();
-        try {
+        try (Session session = Util.getSession()) {
 //            CriteriaBuilder builder = session.getCriteriaBuilder();
 //            CriteriaQuery<User> criteria = builder.createQuery(User.class);
 //            criteria.from(User.class);
@@ -91,9 +86,8 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Session session = Util.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
             session.createSQLQuery(UserDaoJDBCImpl.CLEAN_USERS_TABLE).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
