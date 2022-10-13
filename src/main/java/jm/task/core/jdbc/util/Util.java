@@ -3,13 +3,11 @@ import jm.task.core.jdbc.model.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.imageio.spi.ServiceRegistry;
 
 public class Util {
     public static final String USER_NAME = "root";
@@ -50,7 +48,7 @@ public class Util {
             Configuration configuration = new Configuration();
             configuration.setProperties(properties);
             configuration.addAnnotatedClass(User.class);
-            sessionFactory = (SessionFactory) configuration.buildSessionFactory();
+            sessionFactory = configuration.buildSessionFactory();
         } catch (Throwable e) {
             e.printStackTrace();
         }

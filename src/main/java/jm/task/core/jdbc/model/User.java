@@ -1,5 +1,4 @@
 package jm.task.core.jdbc.model;
-
 import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
